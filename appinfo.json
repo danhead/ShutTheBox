@@ -1,0 +1,89 @@
+{
+  "uuid": "b51ab6d6-496b-47d0-b015-9b5584121d09",
+  "shortName": "Shut The Box",
+  "longName": "Shut The Box",
+  "companyName": "Dan Head",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": [
+      {
+      "menuIcon":true,
+      "type":"png",
+      "name":"MENU_ICON",
+      "file":"images/menu_icon.png"
+      },
+      {
+      "type":"png",
+      "name":"MENU_BG",
+      "file":"images/menu_bg.png"
+      },
+      {
+      "type":"png",
+      "name":"BOX_BACKGROUND",
+      "file":"images/box_background.png"
+      },
+      {
+      "type":"png",
+      "name":"TAB_CLOSED",
+      "file":"images/tab_closed.png"
+      },
+      {
+      "type":"png",
+      "name":"TAB_OPEN",
+      "file":"images/tab_open.png"
+      },
+      {
+      "type":"png",
+      "name":"TAB_OPEN_SELECTED",
+      "file":"images/tab_open_selected.png"
+      },
+      {
+      "type":"png",
+      "name":"DICE_1",
+      "file":"images/dice_1.png"
+      },
+      {
+      "type":"png",
+      "name":"DICE_2",
+      "file":"images/dice_2.png"
+      },
+      {
+      "type":"png",
+      "name":"DICE_3",
+      "file":"images/dice_3.png"
+      },
+      {
+      "type":"png",
+      "name":"DICE_4",
+      "file":"images/dice_4.png"
+      },
+      {
+      "type":"png",
+      "name":"DICE_5",
+      "file":"images/dice_5.png"
+      },
+      {
+      "type":"png",
+      "name":"DICE_6",
+      "file":"images/dice_6.png"
+      },
+      {
+      "type":"png",
+      "name":"CITYSCAPE",
+      "file":"images/cityscape.png"
+      },
+      {
+      "type":"png",
+      "name":"MOON",
+      "file":"images/moon.png"
+      }
+    ]
+  }
+}

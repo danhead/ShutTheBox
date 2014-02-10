@@ -69,6 +69,7 @@ static void toggle_menu(void) {
 }
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   if(combo[counter] == 1) {
+    counter=0;
     gameover_init(false);
     return;
   }

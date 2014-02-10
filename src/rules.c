@@ -19,7 +19,7 @@ static void window_load(Window *window) {
   scroll_layer_add_child(ui.layer,text_layer_get_layer(ui.textTitle));
 
   ui.textRules = text_layer_create(GRect(0,35,144,365));
-  text_layer_set_text(ui.textRules,"The objective of the game is to close all 9 tiles and shut the box.\n\nRoll two dice and close any combination of tiles that equal the sum of the rolled dice.\n\nYou must use the sum of the dice each turn, if you cannot the game is over. Once the sum total of all the open tiles equals 6 or less, you have the choice of using one die instead of two.\n\n\nWritten by Daniel Head.\nme@danielhead.com");
+  text_layer_set_text(ui.textRules,"The objective of the game is to close all 9 tiles and shut the box.\n\nRoll two dice and close any combination of tiles that equal the sum of the rolled dice.\n\nYou must use the sum of the dice each turn, if you cannot the game is over. Once the sum total of all the open tiles equals 6 or less, you have the choice of using one die instead of two.\n\n\nWritten by Daniel Head.\nme@danielhead.com\n\n\nV1.0.1");
   text_layer_set_overflow_mode(ui.textRules,GTextOverflowModeWordWrap);
   text_layer_set_size(ui.textRules,GSize(144,365));
   scroll_layer_add_child(ui.layer,text_layer_get_layer(ui.textRules));

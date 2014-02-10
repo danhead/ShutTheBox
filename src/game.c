@@ -16,13 +16,8 @@ static struct {
   Layer *overlay;
 	Layer *scoreboard;
   Layer *gameover;
-  GPath *pointer;
 } ui;
 static GFont font_s, font_l;
-static GPathInfo arrow = {
-	.num_points = 3,
-	.points = (GPoint []) {{-7, -7}, {7, 0}, {-7, 7}}
-};
 typedef struct{
 	bool open;
 } object;
@@ -103,12 +98,22 @@ static int total_left(void) {
 }
 
 static void roll_dice(int n) {
-  d1=(rand()%5)+1;
+  d1=(rand()%6)+1;
   d2=0;
-  if(n==2) d2=(rand()%5)+1;
+  if(n==2) d2=(rand()%6)+1;
   if(d1+d2<=total_left()) {
     game_stage=2;
   }
+
+}
+
+static void toggle_overlay() { 
+  if(dice_selected == 1) {
+    dice_selected = 2;
+  } else {
+    dice_selected = 1;
+  }
+  layer_mark_dirty(ui.overlay);
 }
 
 void handle_second_tick(struct tm *tick_time, TimeUnits units_changed) {
@@ -234,9 +239,9 @@ static void dice_update_callback(Layer *me, GContext* ctx) {
 	} else if(game_stage == 2 || game_stage == 4) {
     int y = 10;
     if(game_stage == 4) y = 0;
-		graphics_draw_bitmap_in_rect(ctx, diceImgs[d1-1], GRect(30, y, 24, 24));
+		graphics_draw_bitmap_in_rect(ctx, diceImgs[d1-1], GRect(30, y, 26, 26));
 		if(d2!=0) {
-			graphics_draw_bitmap_in_rect(ctx, diceImgs[d2-1], GRect(90, y, 24, 24));
+			graphics_draw_bitmap_in_rect(ctx, diceImgs[d2-1], GRect(90, y, 26, 26));
 		}
     if(game_stage == 4) { 
   		graphics_draw_text(ctx,
@@ -262,6 +267,8 @@ static void overlay_update_callback(Layer *me, GContext* ctx) {
     8,
     GCornersAll);
   graphics_context_set_text_color(ctx, GColorBlack);
+  GFont die1 = (dice_selected==1)?font_l:font_s;
+  GFont die2 = (dice_selected==2)?font_l:font_s;
   graphics_draw_text(ctx,
     "How many dice?",
     font_s,
@@ -271,20 +278,18 @@ static void overlay_update_callback(Layer *me, GContext* ctx) {
     NULL);
   graphics_draw_text(ctx,
     "1 Die",
-    font_s,
-    GRect(30, 25, 70, 25),
+    die1,
+    GRect(30, 22, 70, 30),
     GTextOverflowModeWordWrap,
     GTextAlignmentLeft,
     NULL);
   graphics_draw_text(ctx,
     "2 Dice",
-    font_s,
-    GRect(30, 50, 70, 25),
+    die2,
+    GRect(30, 48, 70, 30),
     GTextOverflowModeWordWrap,
     GTextAlignmentLeft,
     NULL);
-  graphics_context_set_fill_color(ctx, GColorBlack);
-  gpath_draw_filled(ctx, ui.pointer);
 }
 
 static void click_up(ClickRecognizerRef recognizer, void *context) {
@@ -300,14 +305,7 @@ static void click_up(ClickRecognizerRef recognizer, void *context) {
 		}
 		selected = newtab;
 	} else if(game_stage == 3) {
-		if(dice_selected == 1) {
-			dice_selected = 2;
-			gpath_move_to(ui.pointer, GPoint(15, 65));
-		} else {
-			dice_selected = 1;
-			gpath_move_to(ui.pointer, GPoint(15, 42));
-      layer_mark_dirty(ui.dice);
-		}
+		toggle_overlay();
 	} else if(game_stage == 4) {
 		new_game();
 		//layer_mark_dirty(&dice);
@@ -327,14 +325,7 @@ static void click_down(ClickRecognizerRef recognizer, void *context) {
 		}
 		selected = newtab;
 	} else if(game_stage == 3) {
-		if(dice_selected == 1) {
-			dice_selected = 2;
-			gpath_move_to(ui.pointer, GPoint(15, 65));
-		} else {
-			dice_selected = 1;
-			gpath_move_to(ui.pointer, GPoint(15, 42));
-		}
-    layer_mark_dirty(ui.dice);
+    toggle_overlay();
 	} else if(game_stage == 4) {
 		new_game();
 		layer_mark_dirty(ui.dice);
@@ -347,8 +338,7 @@ static void click_select(ClickRecognizerRef recognizer, void *context) {
       layer_set_hidden(ui.overlay,false);
       game_stage = 3;
       dice_selected = 1;
-      gpath_move_to(ui.pointer, GPoint(15, 42));
-      layer_mark_dirty(ui.dice);
+      layer_mark_dirty(ui.overlay);
     } else {
       roll_dice(2);
       if(!move_possible()) {
@@ -365,6 +355,8 @@ static void click_select(ClickRecognizerRef recognizer, void *context) {
         tabs_closed++;
         if(check_move_is_done()) {
           if(tabs_closed==9) {
+            game_stage=1;
+            new_game();
             gameover_init(true);
           }
           counter = 0;
@@ -405,7 +397,6 @@ static void window_load(Window *window) {
   diceImgs[3] = gbitmap_create_with_resource(RESOURCE_ID_DICE_4);
   diceImgs[4] = gbitmap_create_with_resource(RESOURCE_ID_DICE_5);
   diceImgs[5] = gbitmap_create_with_resource(RESOURCE_ID_DICE_6);
-  ui.pointer = gpath_create(&arrow);
 
   ui.box = layer_create((GRect){
   	.origin = { 0, 0 },
